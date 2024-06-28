@@ -1,0 +1,68 @@
+{% load static  %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}store{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/store.css' %}">
+</head>
+
+<body>
+<style>
+    .colortext {
+       color: green;
+    }
+</style>
+<div class="logo"><img src="{% static 'main/img/logo.png' %}" width="350" height="90" ></div>
+   <header>
+    <ul>
+         <a href="{% url 'home' %}"><li>Главная</li></a>
+         <a href="{% url 'map' %}"><li>Карта</li></a>
+         <a href="{% url 'news' %}"><li>Новости</li></a>
+         <a href="{% url 'calendar' %}"><li>Календарь</li></a>
+         <a href="{% url 'store' %}"><li>Магазины</li></a>
+
+    </ul>
+       {% if not user.is_authenticated %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'reg' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Регистрация</button></a>
+            <a href="{% url 'user' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Вход</button></a>
+
+            {% else %}
+
+            <a href="{% url 'profile' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Профиль</button></a>
+            <a href="{% url 'exit' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Выйти</button></a>
+        </div>
+        {% endif %}
+   </header>
+
+<main>
+
+</main>
+{% block content %}
+ {% if news %}
+ {% for el in news %}
+<div class="card mb-3" style="max-width: 800px;">
+  <div class="row g-0">
+    <div class="col-md-8">
+        <img src="{% static 'main/img/plakat.jpg' %}" class="img-fluid rounded-start" alt="...">
+      <div class="card-body">
+        <h5 class="card-title"><strong>{{ el.name }}</strong></h5>
+        <p class="card-text">{{ el.full_text }}</p>
+          <h1 class="card-text">{{ el.adres }}</h1>
+          <a href="{% url 'store_view' el.id %}" class="btn btn-primary">Подробнее</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+{% endif %}
+{% endblock %}
+
+</body>
+</html>

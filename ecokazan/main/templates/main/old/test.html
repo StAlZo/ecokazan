@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://unpkg.com/folium@0.12.1/folium.js"></script>
+</head>
+<body>
+    <div id="map" style="height: 400px;"></div>
+    <select id="district-filter">
+        {% for district in districts %}
+            <option value="{{ district.id }}">{{ district.name }}</option>
+        {% endfor %}
+    </select>
+
+    <script>
+        var map = L.map('map').setView([55.7887400, 49.1221400], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        $('#district-filter').change(function () {
+            var selectedDistrictId = $(this).val();
+
+            // Здесь используйте AJAX для отправки запроса на сервер
+            // и получения координат выбранного района
+            $.ajax({
+                url: '/get_district_coordinates/' + selectedDistrictId + '/',
+                type: 'GET',
+                success: function (data) {
+                    var districtCoordinates = [data.latitude, data.longitude];
+                    map.setView(districtCoordinates, 13);
+                },
+                error: function () {
+                    alert('Error fetching district coordinates');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

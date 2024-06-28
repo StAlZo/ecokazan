@@ -1,0 +1,325 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.user.username }}</title>
+    <link rel="stylesheet" href="{% static 'css/profile-page.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile-calendar.css' %}">
+  </head>
+  <body>
+    {% include 'main/navigation.html' %}
+
+    <main class="main"> 
+      <div class="main__container container">
+        <div class="main__cards"> 
+          <div class="main__col"> 
+            <div class="profile card">
+              <div class="card__head">Профиль</div>
+              <div class="card__body">
+                <div class="profile__head"> 
+                  <div class="profile__avatar"> <img src="{{ profile.avatar.url }}" alt="{{ profile.user.username }}"></div>
+                  <h4 class="profile__name">{{ profile.user.first_name }}<br>{{ profile.user.last_name }}</h4>{% if user == profile.user %}<a class="profile__settings" href="{% url 'profile-edit' profile.user.pk %}"><img src="{% static 'img/settings.svg' %}"></a>{% endif %}
+                </div>
+                <div class="profile__body"> 
+                  <div class="profile__info"> 
+                    <div class="profile__info-label">Пол</div>
+                    <div class="profile__info-value">{{ profile.gender }}</div>
+                  </div>
+                  <div class="profile__info"> 
+                    <div class="profile__info-label">E - mail</div>
+                    <div class="profile__info-value">{{ profile.user.email }}</div>
+                  </div>
+                  <div class="profile__info"> 
+                    <div class="profile__info-label">Дата рождения</div>
+                    <div class="profile__info-value">{{ profile.birth_date }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="main__col">
+            <div class="favorities card">
+              <div class="card__head">Избранное</div>
+              <div class="card__body">
+                <div class="fav-shops"> {% if user == profile.user %} <a class="favorities__settings" href="{% url 'favorites' %}"><img src="{% static 'img/settings.svg' %}"></a> {% endif %}
+                  {% for store in favorites %}
+                  <div class="fav-shop">
+                    <div class="fav-shop__content">
+                      <div class="fav-shop__logo"> <img src="{{ store.store.picture.url }}" alt="Лого магазина"></div>
+                      <div class="fav-shop__body">
+                        <h5 class="fav-shop__name">{{ store.store.name }}</h5>
+                        <p class="fav-shop__desc">эколовка</p>
+                      </div>
+                      {% if store.store.vk_link or store.store.tg_link or store.store.website_link %}
+                      <a class="fav-shop__link" href="{% if store.store.website_link %} {{ store.store.website_link }} {% else %}
+                        {% if store.store.tg_link %} {{ store.store.tg_link }} {% else %}
+                        {% if store.store.vk_link %} {{ store.store.vk_link }} {% endif %} {% endif %} {% endif %}"><span>Подробнее</span></a>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endfor %}
+                  {% for item in favorites_centers %}
+                    <div class="fav-shop">
+                    <div class="fav-shop__content">
+                      <div class="fav-shop__logo"> <img src="{% static 'img/recycling_center_logo.png' %}" alt="Лого магазина"></div>
+                      <div class="fav-shop__body">
+                        <h5 class="fav-shop__name">{{ item.recycling_center.title }}</h5>
+                        <p class="fav-shop__desc">Центр переработки</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    <div class="main__cards">
+        <div class="calendar">
+              <div class="calendar__head">
+                <div class="calendar__arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="8" height="13" viewBox="0 0 8 13" fill="none">
+                    <path d="M6.55947 11.6618L1.86667 6.42782L6.55947 1.19385" stroke="#219653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+                <h4 class="calendar__title">Ноябрь</h4>
+                <div class="calendar__arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="8" height="13" viewBox="0 0 8 13" fill="none">
+                    <path d="M1.78134 11.6618L6.47412 6.42782L1.78134 1.19385" stroke="#219653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="calendar__weeks">
+                <div>пн</div>
+                <div>вт</div>
+                <div>ср</div>
+                <div>чт</div>
+                <div>пт</div>
+                <div>сб</div>
+                <div>вс</div>
+              </div>
+              <div class="calendar__days">
+                <div class="prev-month"><span>30</span></div>
+                <div class="prev-month"><span>31</span></div>
+                <div><span>1 </span></div>
+                <div><span>2 </span></div>
+                <div><span>3 </span></div>
+                <div><span>4 </span></div>
+                <div><span>5 </span></div>
+                <div><span>6 </span></div>
+                <div><span>7 </span></div>
+                <div><span>8 </span></div>
+                <div><span>9 </span></div>
+                <div><span>10</span></div>
+                <div><span>11</span></div>
+                <div><span>12</span></div>
+                <div><span>13</span></div>
+                <div><span>14</span></div>
+                <div><span>15</span></div>
+                <div><span>16</span></div>
+                <div><span>17</span></div>
+                <div><span>18</span></div>
+                <div class="current"><span>19</span></div>
+                <div><span>20</span></div>
+                <div><span>21</span></div>
+                <div><span>22</span></div>
+                <div><span>23</span></div>
+                <div><span>24</span></div>
+                <div><span>25</span></div>
+                <div><span>26</span></div>
+                <div><span>27</span></div>
+                <div><span>28</span></div>
+                <div><span>29</span></div>
+                <div><span>30</span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+                <div><span>  </span></div>
+              </div>
+            </div>
+
+      </div>
+      </div>
+    </main>
+    <script src="js/profile.min.js"> </script>
+
+    <script>
+
+    let events = null;
+    try {
+         events = {{ events | safe }};
+    } catch(e) {
+        events = null;
+    }
+</script>
+
+
+  <script>
+
+    let currentYear;
+    let currentMonth;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentDate = new Date();
+        currentYear = currentDate.getFullYear();
+        currentMonth = currentDate.getMonth() + 1;
+
+        document.querySelector('.calendar__title').textContent = `${getMonthName(currentMonth)}, ${currentYear}`;
+
+        updateCalendar(currentYear, currentMonth, currentDate.getDate());
+
+        document.querySelector('.calendar__arrow:first-child').addEventListener('click', function() {
+            changeMonth(-1);
+        });
+
+        document.querySelector('.calendar__arrow:last-child').addEventListener('click', function() {
+            changeMonth(1);
+        });
+    });
+
+
+
+    function changeMonth(offset) {
+        currentMonth += offset;
+
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        } else if (currentMonth < 1) {
+            currentMonth = 12;
+            currentYear--;
+        }
+
+        document.querySelector('.calendar__title').textContent = `${getMonthName(currentMonth)}, ${currentYear}`;
+
+        const currentDate = new Date();
+        updateCalendar(currentYear, currentMonth, currentDate.getDate());
+    }
+
+    function updateCalendar(year, month, today) {
+        const calendarDays = document.querySelectorAll('.calendar__days span');
+
+        calendarDays.forEach(day => {
+            day.parentElement.classList.remove('prev-month', 'current', 'next-month');
+        });
+
+        let firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+        if (firstDayOfWeek == 0) {
+          firstDayOfWeek = 7;
+        }
+
+        const lastDay = new Date(year, month, 0).getDate();
+
+        let dayNumber = 1;
+
+        let dayIndex = firstDayOfWeek - 2;
+
+        dayIndex = 0;
+        while (dayIndex < firstDayOfWeek - 1) {
+            const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
+            calendarDays[firstDayOfWeek - 2 - dayIndex].textContent = lastDayOfPreviousMonth - dayIndex;
+            calendarDays[dayIndex].parentElement.classList.add('prev-month');
+            dayIndex++;
+        }
+
+        dayNumIndex = firstDayOfWeek - 2;
+        let index = firstDayOfWeek - 1;
+
+        while (dayNumber <= lastDay) {
+            if (dayNumber < 10) {
+              space = " ";
+            } else {
+              space = "";
+            }
+            calendarDays[index].textContent = dayNumber + space;
+
+
+            const currentDate = new Date();
+
+            if (events != null) {
+
+              var day = dayNumber;
+                const eventForDay = getEventsForDay(year, month, day);
+                if (eventForDay) {
+
+                    eventDay = dayNumber;
+                    const parentDiv = calendarDays[dayNumIndex + dayNumber].parentElement;
+                    parentDiv.classList.add('event');
+
+                    const dayElement = calendarDays[dayNumIndex + dayNumber];
+                    dayElement.classList.add('popup');
+                    dayElement.addEventListener("click", function(){
+                    console.log(eventDay);
+                      showPopup(eventDay);
+                    });
+
+                    const popup = document.createElement('div');
+                    popup.classList.add('popuptext');
+
+
+
+                    popup.innerHTML = eventForDay.fields.title + `<a class="content__link link" style="margin-top:4px; height:25px;" href="/forum/${eventForDay.pk}/"><p style="text-align: center;">Подробнее</p></a>`;
+                    popup.id = eventDay;
+
+                    dayElement.appendChild(popup);
+                }
+            }
+
+            if (
+                dayNumber === today &&
+                month === currentDate.getMonth() + 1 &&
+                year === currentDate.getFullYear()
+            ) {
+                calendarDays[dayNumIndex + dayNumber].parentElement.classList.add('current');
+            }
+
+            index++
+            dayNumber++;
+        }
+
+        let nextMonthDay = 1;
+
+        var last = calendarDays.length - 1;
+        while (last >= dayNumber - 1 + dayIndex) {
+            calendarDays[last].textContent = "  ";
+            calendarDays[last].parentElement.classList.add('prev-month');
+            last--;
+        }
+    }
+
+    function getEventsForDay(year, month, day) {
+      return events.find(event => {
+        const eventDate = new Date(event.fields.data);
+         return eventDate.getFullYear() === year && eventDate.getMonth() + 1 === month && eventDate.getDate() === day;
+      });
+    }
+
+
+    function showPopup(eventDay) {
+    console.log(eventDay);
+      var popup = document.getElementById(eventDay);
+      popup.classList.toggle("show");
+
+}
+
+
+
+    function getMonthName(month) {
+        const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        return monthNames[month - 1];
+    }
+
+</script>
+  </body>
+</html>

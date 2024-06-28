@@ -1,0 +1,37 @@
+{% load static %}
+
+<article class="shops__shop shop">
+    <h4 class="shop__name">{{ store.name }}</h4>
+    <div class="shop__content">
+        <div class="shop__logo"><img src="{{ store.picture.url }}" alt="{{ store.name }}"></div>
+        <p class="shop__desc">
+            <span class="accent">Описание:</span><br>
+            {{ store.full_text }}
+            <br> <span class="accent">Адрес:</span> {{ store.adres }}
+            <br> <span class="accent">График работы:</span> {{ store.timejob }}
+        </p>
+
+        <div class="shop__socials">{% if store.website_link %}<a class="shop__link" href="{{ store.website_link }}">Перейти на сайт</a>{% endif %}{% if store.vk_link %}<a href="{{ store.vk_link }}" target="_blank"><img
+                src="{% static 'img/vk.svg' %}" alt="vk icon"></a>{% endif %}{% if store.tg_link %}<a
+                href="{{ store.tg_link }}" target="_blank"> <img src="{% static 'img/telegram.svg' %}"
+                                                                       alt="telegram icon"></a>{% endif %}</div>
+    </div>
+    <div class="shop__stats">
+        <button class="shop__favorite" data-store="{{ store.id }}"><img id="likeImage" src="{% if store.id in likes %}{% static 'img/dil.svg' %}{% else %}{% static 'img/dil-disable.svg' %}{% endif %}" alt="dil"></button>
+        <div class="shop__rate">
+            <div class="shop__rate-title">Рейтинг:</div>
+            <div class="shop__rate-value">
+                <input class="shop__rate-input" id="{{ store.id }}-a" type="radio" name="{{ store.id }}" value="5" data-store-id="{{ store.id }}"{% for rate in ratings %}{% if rate.store == store %}{% if rate.value == 5 %}checked{% endif %}{% endif %}{% endfor %}>
+                <label class="shop__rate-label" for="{{ store.id }}-a"></label>
+                <input class="shop__rate-input" id="{{ store.id }}-b" type="radio" name="{{ store.id }}" value="4" data-store-id="{{ store.id }}"{% for rate in ratings %}{% if rate.store == store %}{% if rate.value == 4 %}checked{% endif %}{% endif %}{% endfor %}>
+                <label class="shop__rate-label" for="{{ store.id }}-b"></label>
+                <input class="shop__rate-input" id="{{ store.id }}-c" type="radio" name="{{ store.id }}" value="3" data-store-id="{{ store.id }}"{% for rate in ratings %}{% if rate.store == store %}{% if rate.value == 3 %}checked{% endif %}{% endif %}{% endfor %}>
+                <label class="shop__rate-label" for="{{ store.id }}-c"></label>
+                <input class="shop__rate-input" id="{{ store.id }}-d" type="radio" name="{{ store.id }}" value="2" data-store-id="{{ store.id }}"{% for rate in ratings %}{% if rate.store == store %}{% if rate.value == 2 %}checked{% endif %}{% endif %}{% endfor %}>
+                <label class="shop__rate-label" for="{{ store.id }}-d"></label>
+                <input class="shop__rate-input" id="{{ store.id }}-e" type="radio" name="{{ store.id }}" value="1" data-store-id="{{ store.id }}"{% for rate in ratings %}{% if rate.store == store %}{% if rate.value == 1 %}checked{% endif %}{% endif %}{% endfor %}>
+                <label class="shop__rate-label" for="{{ store.id }}-e"></label>
+            </div>
+        </div>
+    </div>
+</article>

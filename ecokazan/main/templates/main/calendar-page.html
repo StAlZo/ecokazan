@@ -1,0 +1,197 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Календарь</title>
+    <link rel="stylesheet" href="{% static 'css/calendar-page.min.css' %}">
+</head>
+<body>
+{% include 'main/navigation.html' %}
+
+<main class="main">
+    <div class="calendar">
+            <h2 class="calendar__title"></h2>
+                <button id="prev-month">Назад</button>
+                <button id="next-month">Вперед</button>
+
+        <div class="calendar__week">
+            <div class="calendar__week-cell">Понедельник</div>
+            <div class="calendar__week-cell">Вторник</div>
+            <div class="calendar__week-cell">Среда</div>
+            <div class="calendar__week-cell">Четверг</div>
+            <div class="calendar__week-cell">Пятница</div>
+            <div class="calendar__week-cell">Суббота</div>
+            <div class="calendar__week-cell">Воскресенье</div>
+        </div>
+        <div id="calendar-container" class="calendar__month">
+        </div>
+    </div>
+
+<script>
+
+    let events = null;
+    try {
+         events = {{ events | safe }};
+    } catch(e) {
+        events = null;
+    }
+</script>
+
+    <script>
+const currentDate = new Date('{{ current_date|date:"Y-m-d" }}');
+
+
+
+        let currentYear;
+let currentMonth;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentDate = new Date();
+    currentYear = currentDate.getFullYear();
+    currentMonth = currentDate.getMonth() + 1;
+
+    document.querySelector('.calendar__title').textContent = `${getMonthName(currentMonth)}, ${currentYear}`;
+
+    updateCalendar(currentYear, currentMonth);
+
+    document.getElementById('prev-month').addEventListener('click', function() {
+        changeMonth(-1);
+    });
+
+    document.getElementById('next-month').addEventListener('click', function() {
+        changeMonth(1);
+    });
+
+});
+
+function changeMonth(offset) {
+    currentMonth += offset;
+
+    if (currentMonth > 12) {
+        currentMonth = 1;
+        currentYear++;
+    } else if (currentMonth < 1) {
+        currentMonth = 12;
+        currentYear--;
+    }
+
+    document.querySelector('.calendar__title').textContent = `${getMonthName(currentMonth)}, ${currentYear}`;
+    updateCalendar(currentYear, currentMonth);
+}
+
+function updateCalendar(year, month) {
+    const calendarContainer = document.getElementById('calendar-container');
+
+    calendarContainer.innerHTML = '';
+
+    const lastDay = new Date(year, month, 0).getDate();
+
+    let firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+
+    firstDayOfWeek = (firstDayOfWeek === 0) ? 6 : (firstDayOfWeek - 1);
+
+    for (let i = 0; i < firstDayOfWeek; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('calendar__month-cell', 'calendar__month-cell--empty');
+        calendarContainer.appendChild(emptyCell);
+    }
+
+    for (let day = 1; day <= lastDay; day++) {
+        const cell = document.createElement('div');
+        cell.classList.add('calendar__month-cell');
+
+        const span = document.createElement('span');
+        span.classList.add('calendar__month-day');
+        span.textContent = day;
+
+        if (events != null) {
+        const eventForDay = getEventsForDay(year, month, day);
+        if (eventForDay) {
+            const eventContainer = document.createElement('div');
+            eventContainer.classList.add('calendar__event-container');
+
+            const eventBgTop = document.createElement('div');
+            eventBgTop.classList.add('calendar__cell-bg', 'calendar__cell-bg_top', 'calendar__cell-bg_right');
+
+            const eventBgBottom = document.createElement('div');
+            eventBgBottom.classList.add('calendar__cell-bg', 'calendar__cell-bottom', 'calendar__cell-bg_left', 'calendar__cell-bg_blur');
+            eventBgBottom.style.transform = 'rotate(-270deg)';
+
+            const content = document.createElement('div');
+            content.classList.add('content');
+
+            const eventText = document.createElement('div');
+            eventText.classList.add('content__text');
+            eventText.textContent = eventForDay.fields.title;
+
+            const eventLink = document.createElement('a');
+            eventLink.classList.add('content__link', 'link');
+            const pk = eventForDay.pk;
+            console.log(pk)
+            console.log(eventForDay.pk);
+            eventLink.href = `/forum/${pk}/`;
+
+            const span = document.createElement('span');
+            span.innerHTML = '<span>Подробнее</span><img src="{% static 'img/arrow.svg' %}" alt="icon">';
+            console.log(eventForDay);
+            console.log(eventForDay.model.get_absolute_url);
+
+            eventLink.appendChild(span);
+            content.appendChild(eventText);
+            content.appendChild(eventLink);
+
+            eventContainer.appendChild(eventBgTop);
+            eventContainer.appendChild(eventBgBottom);
+            eventContainer.appendChild(content);
+
+            cell.appendChild(eventContainer);
+        }
+
+        }
+
+        cell.appendChild(span);
+        calendarContainer.appendChild(cell);
+    }
+}
+
+function getEventsForDay(year, month, day) {
+    return events.find(event => {
+        const eventDate = new Date(event.fields.data);
+        return eventDate.getFullYear() === year && eventDate.getMonth() + 1 === month && eventDate.getDate() === day;
+    });
+}
+
+
+function createEventCell(event) {
+    const eventCell = document.createElement('div');
+    eventCell.classList.add('calendar__month-cell', 'event-cell');
+
+    return eventCell;
+}
+
+function getMonthName(month) {
+    const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    return monthNames[month - 1];
+}
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+</main>
+
+<script src="{% static 'js/app.min.js' %}"></script>
+
+</body>
+</html>

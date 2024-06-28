@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум</title>
+    <link rel="stylesheet" href="{% static 'css/single-post-page.min.css' %}">
+  </head>
+  <body>
+    {% include 'main/navigation.html' %}
+
+    <main class="main"> 
+      <div class="main__container container">
+        <div class="post"> 
+          <div class="post__info"> 
+            <h2 class="post__title">Экологический праздник "Зеленая система" пройдет 14 октября с 12:00 до 19:00 часов в рамках фестиваля КультТорг</h2>
+            <div class="post__desc">
+              <h4>Описание:</h4>
+              <p>
+                 На фестивале будут проводить:<br>
+                прием вторсырья.<br>
+                экодвор - здесь вы наглядно посмотрите, чем можно заменить одноразовые альтернативы и во что перерабатывают вторсырье.<br>
+                экоигры для детей и взрослых про экологический след наших товаров<br>
+                мастер-класс по созданию брелков из переработанных пластиковых крышек.<br>
+              </p>
+              <p>с 13:15 до 14:00 продажа экотоваров от экомаркета Low Waste</p>
+            </div>
+            <div class="post__location">
+              <h4>Место проведения:</h4>
+              <p>Праздник будет проходить в ТРК Родина (ул. Баумана, 44)</p>
+            </div>
+            <div class="post__image"> <img src="./images/poster.png" alt=""></div>
+          </div>
+          <div class="chat"> 
+            <div class="chat__dialog">
+              <article class="topic__comment comment"> 
+                <div class="comment__avatar"> <img src="./images/avatar-1.png" alt=""></div>
+                <p class="comment__text">Хорошая новость!</p>
+              </article>
+              <article class="topic__comment comment comment_self">
+                <p class="comment__text">Паспорт брать?</p>
+              </article>
+              <article class="topic__comment comment"> 
+                <div class="comment__avatar"> <img src="./images/avatar-2.png" alt=""></div>
+                <p class="comment__text">Я обязательно приду!!<br>а где будет проходить мероприятие?</p>
+              </article>
+            </div>
+            <form class="chat__form chat-form form" method="POST" action="#" name="chat-form">
+              <div class="form__file chat-form__file">
+                <input class="chat-form__file-input" type="file" id="file" accept=".pdf, .doc, .docx">
+                <label class="chat-form__file-label" for="file"> <img src="./images/attach.svg"><span class="count"></span></label>
+              </div>
+              <div class="chat-form__input-wrapper">
+                <input class="chat-form__input form__input" type="text" id="comment">
+                <label class="chat-form__label form__label" for="comment">Напиши комментарий</label>
+              </div>
+              <button class="chat-form__submit" type="submit">Отправить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/app.min.js"> </script>
+    <script src="js/post.min.js"> </script>
+  </body>
+</html>

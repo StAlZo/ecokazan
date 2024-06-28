@@ -1,0 +1,26 @@
+{% load static %}
+
+<article class="topic">
+    <div class="topic__head">
+        <h3 class="topic__title">{{ new.title }}</h3><a class="link" href="{% url 'forum-detail' new.id %}"> <span>Подробнее</span><img
+            src="{% static 'img/arrow.svg' %}" alt="icon"></a>
+    </div>
+    <div class="topic__body">
+        <div class="topic__comments">
+            {% if comments|length > 0 %}
+                {% for dict in comments %}
+                    {% for key, value in dict.items %}
+                        {% if key == new %}
+                            {% for comment in value %}
+                                <article class="topic__comment comment">
+                                    <div class="comment__avatar"><img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author }}"></div>
+                                    <p class="comment__text">{{ comment.content }}</p>
+                                </article>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</article>

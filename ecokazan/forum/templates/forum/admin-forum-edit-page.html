@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница администратора</title>
+    <link rel="stylesheet" href="css/admin-forum-edit-page.min.css">
+  </head>
+  <body> 
+    <main class="main"> 
+      <div class="main__bg"></div>
+      <div class="sidebar"> 
+        <div class="sidebar__burger"><span></span></div><a class="sidebar__logo" href="/"><img src="./images/logo-small.png" alt="ecokazan logo"></a>
+        <nav class="sidebar__nav">
+          <ul class="sidebar__menu"> 
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link" href="./admin-recycling-page.html">Центр переработки</a></li>
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link sidebar__menu-link_active" href="./admin-forum-page.html">Форум</a></li>
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link" href="#">Мазгазины</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="main__content content">
+        <form class="form create-post-form" action="#" method="POST" name="create-post-form">
+          <div class="create-post-form__col create-post-form__col_first">
+            <div class="create-post-form__field form__field"> 
+              <input class="form__input" type="text" name="title" id="title">
+              <label class="form__label" for="title">Заголовок</label>
+            </div>
+            <div class="create-form__field form__field"> 
+              <textarea class="form__input" type="text" name="type" id="desc" rows="5"></textarea>
+              <label class="form__label" for="desc">Описание</label>
+            </div>
+            <div class="create-post-form__field form__field"> 
+              <input class="form__input" type="text" name="date" id="date">
+              <label class="form__label" for="date">Дата</label>
+            </div>
+            <div class="create-post-form__field form__field"> 
+              <input class="form__input" type="text" name="location" id="location">
+              <label class="form__label" for="location">Место проведения</label>
+            </div>
+          </div>
+          <div class="create-post-form__col create-post-form__col_second">
+            <div class="create-post-form__file-field"> 
+              <input class="create-post-form__file-input" name="image" type="file" id="image" accept=".jpg, .png, .jpeg, .gif">
+              <label class="create-post-form__file-label" for="image">Добавить фото</label>
+            </div>
+          </div>
+          <div class="create-post-form__actions"> 
+            <button class="create-post-form__button form__button form__button_submit button" button="submit">Сохранить</button>
+            <button class="create-post-form__button form__button form__button_delete button" type="button">Удалить</button>
+            <button class="create-post-form__button form__button form__button button" type="button">Добавить в календарь</button>
+          </div>
+        </form>
+        <div class="chat"> 
+          <div class="chat__dialog">
+            <article class="topic__comment comment"> 
+              <div class="comment__avatar"> <img src="./images/avatar-1.png" alt=""></div>
+              <p class="comment__text">Хорошая новость!</p>
+              <button class="comment__delete" type="button">Удалить</button>
+            </article>
+            <article class="topic__comment comment"> 
+              <div class="comment__avatar"> <img src="./images/avatar-2.png" alt=""></div>
+              <p class="comment__text">Я обязательно приду!!<br>а где будет проходить мероприятие?</p>
+              <button class="comment__delete" type="button">Удалить</button>
+            </article>
+          </div>
+          <form class="chat__form chat-form form" method="POST" action="#" name="chat-form">
+            <div class="form__file chat-form__file">
+              <input class="chat-form__file-input" type="file" id="file" accept=".pdf, .doc, .docx">
+              <label class="chat-form__file-label" for="file"> <img src="./images/attach.svg"><span class="count"></span></label>
+            </div>
+            <div class="chat-form__input-wrapper">
+              <input class="chat-form__input form__input" type="text" id="comment">
+              <label class="chat-form__label form__label" for="comment">Напиши комментарий</label>
+            </div>
+            <button class="chat-form__submit" type="submit">Отправить</button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="js/admin.min.js"> </script>
+  </body>
+</html>

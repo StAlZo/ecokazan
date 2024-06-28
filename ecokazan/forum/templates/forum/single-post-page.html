@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/single-post-page.min.css' %}">
+  </head>
+  <body>
+    {% include 'main/navigation.html' %}
+    <main class="main"> 
+      <div class="main__container container">
+        <div class="main__actions"><a class="main__button button" href="{% url 'forum' %}">Вернуться</a>
+          <button class="main__button button save-event" type="button" data-event="{{ article.id }}">{% if saves %}В календаре{% else %}Добавить в мой календарь{% endif %}</button>
+        </div>
+
+        <div class="post" style="display: flex; gap: 50px;">
+          <div class="post__info"> 
+            <h2 class="post__title">{{ article.title }}</h2>
+            <div class="post__desc">
+              <h4>Описание:</h4>
+              <p>{{ article.full_text }}</p>
+            </div>
+            <div class="post__location">
+              <h4>Место проведения:</h4>
+              <p>{{ article.mesto }}</p>
+            </div>
+            <div class="post__image"> <img src="{{ article.picture.url }}" alt="Фото новости"></div>
+          </div>
+          <div class="chat" style="">
+            {% for comment in comments %}
+                <article class="topic__comment comment">
+                  <div class="comment__avatar"> <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}"></div>
+                  <p class="comment__text">{{ comment.content }}</p>
+                </article>
+            {% endfor %}
+
+            <form class="chat__form chat-form form" action="{% url 'comment_create' article.pk %}" method="post" name="chat-form">
+              <div class="form__file chat-form__file">
+                <input class="chat-form__file-input" type="file" id="file" accept=".pdf, .doc, .docx">
+                <label class="chat-form__file-label" for="file"> <img src="{% static 'img/attach.svg' %}"><span class="count"></span></label>
+              </div>
+
+              {% if user.is_authenticated %}
+                  {% csrf_token %}
+                  <div class="chat-form__input-wrapper">
+                    <input class="chat-form__input form__input" type="text" name="content" id="id_content">
+                    <label class="chat-form__label form__label" for="id_content">Напиши комментарий</label>
+                  </div>
+                  <button class="chat-form__submit" type="submit">Отправить</button>
+              {% else %}
+                  <div class="chat-form__input-wrapper">
+                    <input class="chat-form__input form__input" type="text" id="comment" disabled>
+                    <label class="chat-form__label form__label" for="comment">Авторизируйся и напиши комментарий</label>
+                  </div>
+                  <button class="chat-form__submit" type="" disabled>Отправить</button>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+        </div>
+
+    </main>
+    <script src="{% static 'js/app.min.js' %}"> </script>
+    <script src="{% static 'js/like.js' %}"></script>
+  </body>
+</html>

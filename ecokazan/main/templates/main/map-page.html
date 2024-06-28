@@ -1,0 +1,227 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта</title>
+    <link rel="stylesheet" href="{% static 'css/map-page.min.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+{% include 'main/navigation.html' %}
+
+<main class="main">
+
+    <div class="main__container container">
+        <div class="main__filter-panel">
+            <div class="map__dropdown dropdown">
+                <div>
+                    <select class="custom-select" name="raion" id="raion-select">
+                        <option value="start" selected disabled>Укажите район</option>
+                        <option value="Московский">Московский</option>
+                        <option value="Вахитовский">Вахитовский</option>
+                        <option value="Приволжский">Приволжский</option>
+                        <option value="Советский">Советский</option>
+                        <option value="Кировский">Кировский</option>
+                        <option value="Ново-Савиновский">Ново-Савиновский</option>
+                        <option value="Авиастроительный">Авиастроительный</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="map__dropdown dropdown">
+                <div>
+                    <select class="custom-select" name="tip" id="type-select">
+                        <option value="start" selected disabled>Выберите тип переработки</option>
+                        <option value="Макулатура">Макулатура</option>
+                        <option value="Металлолом">Металлолом</option>
+                        <option value="Аккумуляторы">Аккумуляторы</option>
+                        <option value="Одежда">Одежда</option>
+                        <option value="Батарейки">Батарейки</option>
+                        <option value="Пластик">Пластик</option>
+                        <option value="Стеклотара">Стеклотара</option>
+                        <option value="Техника">Техника</option>
+                    </select>
+
+                </div>
+            </div>
+        </div>
+        <div class="main__map-container">
+            <div id="map"></div>
+            <div class="main__map-pins">
+                <div class="pin">
+                    <h4 class="pin__title">"Интерметтрейд"</h4>
+                    <div class="pin__type">Металлолом</div>
+                    <a class="pin__phone" href="tel:+78432775716">8 (843) 277-57-16</a>
+                    <div class="pin__address">ул. Даурская, д. 12а</div>
+                </div>
+                <div class="pin">
+                    <h4 class="pin__title">"Экология Поволжья"</h4>
+                    <div class="pin__type">Аккумулятор</div>
+                    <a class="pin__phone" href="tel:+78432509596">+7 (843) 250-95-96</a>
+                    <div class="pin__address">ул. Аделя Кутуя, 163</div>
+                </div>
+                <div class="pin">
+                    <h4 class="pin__title">"EcoPAper"</h4>
+                    <div class="pin__type">Макулатура</div>
+                    <a class="pin__phone" href="tel:+7904673154">8 (904) 673-15-34</a>
+                    <div class="pin__address">ул. Даурская, д. 12а</div>
+                </div>
+                <div class="pin">
+                    <h4 class="pin__title">"Вторая жизнь"</h4>
+                    <div class="pin__type">Макулатура</div>
+                    <a class="pin__phone" href="tel:+79872250092">+7 (987) 225-00-92</a>
+                    <div class="pin__address">ул. Максимова, 3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
+
+<script src="{% static 'js/app.min.js' %}"></script>
+
+<script>
+    var user_check = {% if user.is_authenticated %}true{% else %}false{% endif %};
+
+    console.log(user_check);
+
+    function isFavorite(centerId) {
+        if ('{{ favorites }}' == 'None') {
+            return false
+        } else {
+            var favorites = JSON.parse('{{ favorites | safe }}');
+
+            return favorites.includes(parseInt(centerId));
+        }
+    }
+</script>
+
+<script>
+
+    var map = L.map('map').setView([55.7887400, 49.1221400], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var centers = [
+            {% for center in recycling_centers %}
+                {
+                    id: '{{ center.id }}',
+                    name: '{{ center.title }}',
+                    phone_number: '{{ center.phone_number }}',
+                    latitude: '{{ center.latitude }}',
+                    longitude: '{{ center.longitude }}',
+                    type: '{{ center.recycling_type }}',
+                    district: '{{ center.district }}',
+                    address: '{{ center.address }}'
+                },
+            {% endfor %}
+        ];
+
+        for (var i = 0; i < centers.length; i++) {
+            centers[i].latitude = centers[i].latitude.replace(",", ".");
+            centers[i].longitude = centers[i].longitude.replace(",", ".");
+        }
+
+        var markers = [];
+
+
+        for (var i = 0; i < centers.length; i++) {
+            var center = centers[i];
+            var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+            var marker = L.marker(latLng).addTo(map);
+
+            popupContent = '<b>' + center.name + '</b><br>Тип переработки: ' + center.type + '<br>Район: ' + center.district + '<br>Номер телефона: ' + center.phone_number + '<br>Адрес: ' + center.address;
+            if (user_check) {
+                var isFavoriteCenter = isFavorite(center.id);
+                var favoriteImg = isFavoriteCenter ? '{% static "img/dil.svg" %}' : '{% static "img/dil-disable.svg" %}';
+                popupContent += '<br><button id="' + center.id + '" onclick="addToFavorites(' + center.id + ')"><img id="favoriteImage" src="' + favoriteImg + '"></button>';
+            }
+            marker.bindPopup(popupContent);
+
+            markers.push(marker);
+        }
+
+        var raionSelect = document.getElementById('raion-select');
+        var typeSelect = document.getElementById('type-select');
+
+        raionSelect.addEventListener('change', updateMap);
+        typeSelect.addEventListener('change', updateMap);
+
+        function updateMap() {
+            var selected_raion = raionSelect.value;
+            var selected_type = typeSelect.value;
+
+            for (var i = 0; i < markers.length; i++) {
+                map.removeLayer(markers[i]);
+            }
+
+            for (var i = 0; i < centers.length; i++) {
+                var center = centers[i];
+
+                if ((!selected_type || center.type === selected_type) &&
+                    (!selected_raion || center.district === selected_raion)) {
+                    var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+                    var marker = L.marker(latLng).addTo(map);
+
+                    popupContent = '<b>' + center.name + '</b><br>Тип переработки: ' + center.type + '<br>Район: ' + center.district + '<br>Номер телефона: ' + center.phone_number + '<br>Адрес: ' + center.address;
+                    if (user_check) {
+
+                        popupContent += '<br><button id="' + center.id + '" onclick="addToFavorites(' + center.id + ')"><img id="favoriteImage" src="' + favoriteImg + '"></button>';
+                    }
+                    marker.bindPopup(popupContent);
+
+                    markers.push(marker);
+                }
+            }
+
+            if ((selected_raion == 'start') && (selected_type != 'start')) {
+                for (var i = 0; i < centers.length; i++) {
+                    var center = centers[i];
+
+                    if (!selected_type || center.type === selected_type) {
+                        var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+                        var marker = L.marker(latLng).addTo(map);
+
+                        popupContent = '<b>' + center.name + '</b><br>Тип переработки: ' + center.type + '<br>Район: ' + center.district + '<br>Номер телефона: ' + center.phone_number + '<br>Адрес: ' + center.address;
+                        if (user_check) {
+
+                            popupContent += '<br><button id="' + center.id + '" onclick="addToFavorites(' + center.id + ')"><img id="favoriteImage" src="' + favoriteImg + '"></button>';
+                        }
+                        marker.bindPopup(popupContent);
+
+                        markers.push(marker);
+                    }
+                }
+
+                var districtCoordinates = centers.find(function (center) {
+                    return center.type === selected_type;
+                });
+
+                if (districtCoordinates) {
+                    map.setView([parseFloat(districtCoordinates.latitude), parseFloat(districtCoordinates.longitude)], 13);
+                }
+            }
+
+            if (selected_raion !== 'start') {
+                var districtCoordinates = centers.find(function (center) {
+                    return center.district === selected_raion;
+                });
+
+                if (districtCoordinates) {
+                    map.setView([parseFloat(districtCoordinates.latitude), parseFloat(districtCoordinates.longitude)], 13);
+                }
+            }
+        }
+
+</script>
+
+<script src="{% static 'js/favorite_center.js' %}"></script>

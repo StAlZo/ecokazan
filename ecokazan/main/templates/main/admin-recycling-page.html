@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница администратора</title>
+    <link rel="stylesheet" href="css/admin-recycling-page.min.css">
+  </head>
+  <body> 
+    <main class="main"> 
+      <div class="main__bg"></div>
+      <div class="sidebar"> 
+        <div class="sidebar__burger"><span></span></div><a class="sidebar__logo" href="/"><img src="./images/logo-small.png" alt="ecokazan logo"></a>
+        <nav class="sidebar__nav">
+          <ul class="sidebar__menu"> 
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link sidebar__menu-link_active" href="./admin-recycling-page.html">Центр переработки</a></li>
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link" href="./admin-forum-page.html">Форум</a></li>
+            <li class="sidebar__menu-item"> <a class="sidebar__menu-link" href="#">Мазгазины</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="main__content content">
+        <div class="main__content-wrapper recycling__wrapper">
+          <form class="form create-form" action="#" name="create-form" method="POST">
+            <div class="create-form__body">
+              <div class="create-form__field form__field"> 
+                <input class="form__input" type="text" name="title" id="title">
+                <label class="form__label" for="title">Название</label>
+              </div>
+              <div class="create-form__field form__field"> 
+                <input class="form__input" type="text" name="address" id="address">
+                <label class="form__label" for="address">Адрес</label>
+              </div>
+              <div class="create-form__field form__field"> 
+                <input class="form__input" type="tel" name="phone" id="phone">
+                <label class="form__label" for="phone">Контактный номер</label>
+              </div>
+              <div class="create-form__field form__field"> 
+                <input class="form__input" type="text" name="hours" id="hours">
+                <label class="form__label" for="hours">Часы работы</label>
+              </div>
+              <div class="create-form__field form__field"> 
+                <input class="form__input" type="text" name="type" id="type">
+                <label class="form__label" for="type">Тип переработки</label>
+              </div>
+              <div class="create-form__field form__field"> 
+                <textarea class="form__input" type="text" name="type" id="desc" rows="5"></textarea>
+                <label class="form__label" for="desc">Описание</label>
+              </div>
+            </div>
+            <div class="create-form__actions form__actions"> 
+              <button class="create-form__button form__button form__button_submit button" type="submit">Отправить</button>
+              <button class="create-form__button form__button form__button_delete button" type="button">Удалить</button>
+            </div>
+          </form>
+          <div class="search-panel">
+            <form class="search-panel__form search-form form" action="#" name="search-form" method="GET"> 
+              <div class="search-form__wrapper">
+                <div class="search-form__field form__field">
+                  <input class="search-form__input form__input" type="text" name="search" id="search">
+                  <label class="search-form__label form__label" for="search">Поиск</label>
+                </div>
+                <button class="search-form__button button" type="submit">Найти</button>
+              </div>
+              <div class="search-form__filter"> 
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="paper">
+                  <label for="paper">Макулатура</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="metal">
+                  <label for="metal">Металлолом</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="accumulator">
+                  <label for="accumulator">Аккумуляторы</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="clothes">
+                  <label for="clothes">Одежда</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="battarey">
+                  <label for="battarey">Батарейки</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="plastic">
+                  <label for="plastic">Пластик</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="glass">
+                  <label for="glass">Стеклотара</label>
+                </div>
+                <div class="search-form__filter-item"> 
+                  <input type="radio" name="recycling" id="tech">
+                  <label for="tech">Техника</label>
+                </div>
+              </div>
+            </form>
+            <div class="search-panel__result"> 
+              <div class="search-panel__result-title">Название компании</div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Вторая жизнь</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Комиссионный магазин</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Солнышкр</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Центр социальной адаптации "Милосердие"</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Находка</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Флагман</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">ОДЕВАЙ-КА</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Изумруд Сигма</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Аленка</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Mov-Style</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+              <div class="search-panel__result-item result-item"> 
+                <div class="result-item__name">Комиссионный магазин</div>
+                <button class="result-item__button">Редактировать</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/admin.min.js"> </script>
+  </body>
+</html>

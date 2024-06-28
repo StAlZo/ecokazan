@@ -1,0 +1,23 @@
+{% load static %}
+
+<header class="header">
+    <div class="header__container container"><a class="header__logo" href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}"
+                                                                                   alt="eco kazkan"></a>
+        <div class="header__actions">
+            <nav class="header__nav">
+                <ul class="header__menu menu">
+                    <li class="menu__item {{ index_active }}"><a class="menu__link" href="{% url 'home' %}">Главная</a>
+                    </li>
+                    <li class="menu__item {{ map_active }}"><a class="menu__link" href="{% url 'map' %}">Карта</a></li>
+                    <li class="menu__item {{ forum_active }}"><a class="menu__link" href="{% url 'forum' %}">Форум</a></li>
+                    <li class="menu__item {{ calendar_active }}"><a class="menu__link" href="{% url 'calendar' %}">Календарь</a></li>
+                    <li class="menu__item {{ store_active }}"><a class="menu__link" href="{% url 'stores' %}">Магазины</a></li>
+                </ul>
+            </nav>
+            {% if user.is_authenticated %}<a class="header__button" style="margin-right: 70px;" href="{% url 'profile_detail' user.profile.id %}">{{ user.username }}</a>
+            <a class="header__button" style="padding: 3.5px 12px 3.5px 10px;" href="{% url 'exit' %}">Выход</a>
+            {% else %}<a class="header__button" href="{% url 'sign_in' %}">Войти</a>{% endif %}
+        </div>
+        <div class="header__burger"><span></span></div>
+    </div>
+</header>

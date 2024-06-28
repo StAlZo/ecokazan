@@ -1,0 +1,211 @@
+{% load static  %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}map{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/map.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/folium@0.12.1/folium.js"></script>
+</head>
+
+<body>
+<style>
+    .colortext {
+       color: green;
+    }
+</style>
+<div class="logo"><img src="{% static 'main/img/logo.png' %}" width="350" height="90"></div>
+<header>
+    <ul>
+        <a href="{% url 'home' %}">
+            <li>Главная</li>
+        </a>
+        <a href="{% url 'map' %}">
+            <li>Карта</li>
+        </a>
+        <a href="{% url 'news' %}">
+            <li>Новости</li>
+        </a>
+        <a href="{% url 'calendar' %}">
+            <li>Календарь</li>
+        </a>
+        <a href="{% url 'store' %}">
+            <li>Магазины</li>
+        </a>
+
+    </ul>
+    {% if not user.is_authenticated %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'reg' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Регистрация</button></a>
+            <a href="{% url 'user' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Вход</button></a>
+
+            {% else %}
+
+            <a href="{% url 'profile' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Профиль</button></a>
+            <a href="{% url 'exit' %}"><button type="button" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Выйти</button></a>
+        </div>
+        {% endif %}
+</header>
+
+<label for="raion-select"></label>
+
+<select name="raion" id="raion-select">
+    <option value="start">Укажите район</option>
+    <option value="Московский">Московский</option>
+    <option value="Вахитовский">Вахитовский</option>
+    <option value="Приволжский">Приволжский</option>
+    <option value="Советский">Советский</option>
+    <option value="Кировский">Кировский</option>
+    <option value="Ново-Савиновский">Ново-Савиновский</option>
+    <option value="Авиастроительный">Авиастроительный</option>
+</select>
+
+<label for="tip-select"></label>
+
+<select name="tip" id="tip-select">
+    <option value="start">Выберите тип переработки</option>
+    <option value="Макулатура">Макулатура</option>
+    <option value="Металлолом">Металлолом</option>
+    <option value="Аккумуляторы">Аккумуляторы</option>
+    <option value="Одежда">Одежда</option>
+    <option value="Батарейки">Батарейки</option>
+    <option value="Пластик">Пластик</option>
+    <option value="Стеклотара">Стеклотара</option>
+    <option value="Техника">Техника</option>
+</select>
+
+<div id="map" style="height: 400px; width: 1000px; margin: auto"></div>
+
+<script>
+
+    var map = L.map('map').setView([55.7887400, 49.1221400], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var centers = [
+            {% for center in recycling_centers %}
+                {
+                    name: '{{ center.title }}',
+                    phone_number: '{{ center.phone_number }}',
+                    latitude: '{{ center.latitude }}',
+                    longitude: '{{ center.longitude }}',
+                    type: '{{ center.recycling_type }}',
+                    district: '{{ center.district }}',
+                    address: '{{ center.address }}'
+                },
+            {% endfor %}
+        ];
+
+        for (var i = 0; i < centers.length; i++) {
+            centers[i].latitude = centers[i].latitude.replace(",", ".");
+            centers[i].longitude = centers[i].longitude.replace(",", ".");
+        }
+
+        var markers = [];
+
+        for (var i = 0; i < centers.length; i++) {
+            var center = centers[i];
+            var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+            var marker = L.marker(latLng).addTo(map);
+            marker.bindPopup('<b>' + center.name + '</b><br>Тип переработки: ' + center.type + '<br>Район: ' + center.district + '<br>Номер телефона: ' + center.phone_number + '<br>Адрес: ' + center.address);
+            markers.push(marker);
+        }
+
+        var raionSelect = document.getElementById('raion-select');
+        var tipSelect = document.getElementById('tip-select');
+
+        raionSelect.addEventListener('change', updateMap);
+        tipSelect.addEventListener('change', updateMap);
+
+        function updateMap() {
+            var selected_raion = raionSelect.value;
+            var selected_tip = tipSelect.value;
+
+            // Скрыть все маркеры
+            for (var i = 0; i < markers.length; i++) {
+                map.removeLayer(markers[i]);
+            }
+
+            // Показать только маркеры, соответствующие выбранным параметрам
+            for (var i = 0; i < centers.length; i++) {
+                var center = centers[i];
+
+                if ((!selected_tip || center.type === selected_tip) &&
+                    (!selected_raion || center.district === selected_raion)) {
+                    var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+                    var marker = L.marker(latLng).addTo(map);
+                    marker.bindPopup('<b>' + center.name + '</b><br>Тип переработки: ' + center.type + '<br>Район: ' + center.district + '<br>Номер телефона: ' + center.phone_number + '<br>Адрес: ' + center.address);
+                    markers.push(marker);
+                }
+            }
+
+            if ((selected_raion == 'start') && (selected_tip != 'start')) {
+                for (var i = 0; i < centers.length; i++) {
+                    var center = centers[i];
+
+                    if (!selected_tip || center.type === selected_tip) {
+                        var latLng = [parseFloat(center.latitude), parseFloat(center.longitude)];
+                        var marker = L.marker(latLng).addTo(map);
+                        marker.bindPopup('<b>' + center.name + '</b><br>Type: ' + center.type + '<br>District: ' + center.district + '<br>Phone number: ' + center.phone_number + '<br>Address: ' + center.address);
+                        markers.push(marker);
+                    }
+                }
+
+                var districtCoordinates = centers.find(function (center) {
+                    return center.type === selected_tip;
+                });
+
+                if (districtCoordinates) {
+                    map.setView([parseFloat(districtCoordinates.latitude), parseFloat(districtCoordinates.longitude)], 13);
+                }
+            }
+
+            if (selected_raion !== 'start') {
+                var districtCoordinates = centers.find(function (center) {
+                    return center.district === selected_raion;
+                });
+
+                if (districtCoordinates) {
+                    map.setView([parseFloat(districtCoordinates.latitude), parseFloat(districtCoordinates.longitude)], 13);
+                }
+            }
+        }
+
+
+<!--    var map = L.map('map').setView([55.7887400, 49.1221400], 13);-->
+
+<!--    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {-->
+<!--        attribution: '© OpenStreetMap contributors'-->
+<!--    }).addTo(map);-->
+
+<!--    var districtCoordinates = {-->
+<!--        'start': [55.7887400, 49.1221400],-->
+<!--        'sav': [55.829239, 49.130757]-->
+<!--    };-->
+
+<!--    var tipSelect = document.getElementById('raion-select');-->
+
+<!--    tipSelect.addEventListener('change', function () {-->
+<!--        var selectedDistrict = tipSelect.value;-->
+
+<!--        if (selectedDistrict && districtCoordinates[selectedDistrict]) {-->
+<!--            map.setView(districtCoordinates[selectedDistrict], 13);-->
+<!--        }-->
+<!--    });-->
+</script>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>

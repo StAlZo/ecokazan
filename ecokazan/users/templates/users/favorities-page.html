@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Избранное</title>
+    <link rel="stylesheet" href="{% static 'css/favorities-page.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shops-page.min.css' %}">
+  </head>
+  <body>
+    {% include 'main/navigation.html' %}
+
+    <main class="main"> 
+      <div class="main__container container">
+        <div class="favorities card">
+          <div class="favorities__head card__head">Избранное</div>
+          <div class="favorities__body card__body">
+            <div class="favorities__wrapper">
+              <div class="fav-shops">
+                {% for store in favorite_stores %}
+                <div class="fav-shop">
+                  <div class="fav-shop__content">
+                    <div class="fav-shop__logo"> <img src="{{ store.store.picture.url }}" alt="Лого магазина"></div>
+                    <div class="fav-shop__body">
+                      <h5 class="fav-shop__name">{{ store.store.name }}</h5>
+                      <p class="fav-shop__desc">эколовка</p>
+                    </div>
+                    <div class="shop__socials">{% if store.store.website_link %}<a class="shop__link" href="{{ store.store.website_link }}">Перейти на сайт</a>{% endif %}{% if store.store.vk_link %}<a href="{{ store.store.vk_link }}" target="_blank"><img
+                            src="{% static 'img/vk.svg' %}" alt="vk icon"></a>{% endif %}{% if store.store.tg_link %}<a
+                            href="{{ store.store.tg_link }}" target="_blank"> <img src="{% static 'img/telegram.svg' %}"
+                            alt="telegram icon"></a>{% endif %}</div>
+                    <button class="fav-shop__button fav-store-remove" type="button" data-store-id="{{ store.id }}"><img src="{% static 'img/trash.svg' %}" alt=""></button>
+                  </div>
+                </div>
+                {% endfor %}
+                {% for item in favorite_centers %}
+                  <div class="fav-shop">
+                  <div class="fav-shop__content">
+                    <div class="fav-shop__logo"> <img src="{% static 'img/recycling_center_logo.png' %}" alt="Лого магазина"></div>
+                    <div class="fav-shop__body">
+                      <h5 class="fav-shop__name">{{ item.recycling_center.title }}</h5>
+                      <p class="fav-shop__desc">Центр переработки</p>
+                    </div>
+                    <div class="shop__socials" style="text-align: center;">
+                      {{ item.recycling_center.recycling_type }}<br>
+                      {{ item.recycling_center.phone_number }}<br>
+                      {{ item.recycling_center.address }}
+                    </div>
+                    <button class="fav-shop__button fav-center-remove" type="button" data-center-id="{{ item.id }}"><img src="{% static 'img/trash.svg' %}" alt=""></button>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              <div class="favorities__actions"> <a class="favorities__button button" href="{% url 'profile_detail' user.profile.id %}">Вернуться</a>
+                <button class="favorities__button button">Сохранить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="{% static 'js/app.min.js' %}"> </script>
+    <script src="{% static 'js/like.js' %}"> </script>
+    <script src="{% static 'js/favorite_center.js' %}"></script>
+  </body>
+</html>

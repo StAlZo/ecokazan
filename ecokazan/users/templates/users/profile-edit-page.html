@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование профиля</title>
+    <link rel="stylesheet" href="{% static 'css/profile-edit-page.min.css' %}">
+  </head>
+  <body>
+    {% include 'main/navigation.html' %}
+
+    <main class="main"> 
+      <div class="main__container container">
+        <div class="profile">
+          <div class="profile__head"> 
+            <h3 class="profile__title">Профиль</h3>
+          </div>
+
+          <div class="profile__body">
+            <form class="profile__form form" action="#" method="post" name="profile-edit" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="profile__avatar">
+                  <label for="avatar">
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile.user.username }}">
+                    <input style="display: none; position: center;" type="file" accept=".png, .jpg, .jpeg" id="avatar" name="avatar" value="{{ profile.avatar.url }}">
+                  </label>
+
+                </div>
+              <div class="form__field">
+                <input value="{{ profile.user.first_name }}" class="form__input profile__name" type="text" name="first_name" id="id_first_name">
+              </div>
+              <div class="form__field">
+                <input value="{{ profile.user.last_name }}" class="form__input profile__surname" type="text" name="last_name" id="id_last_name">
+              </div>
+              <div class="form__radio">
+                <div class="form__radio-variant">
+                  <input type="radio" name="gender" id="male" value="Мужской" {% if profile.gender == "Мужской" %}checked{% endif %}>
+                  <label for="male"> <span class="icon"> </span><span class="text">Муж</span></label>
+                </div>
+                <div class="form__radio-variant">
+                  <input type="radio" name="gender" id="female" value="Женский" {% if profile.gender == "Женский" %}checked{% endif %}>
+                  <label for="female"> <span class="icon"></span><span class="text">Жен</span></label>
+                </div>
+              </div>
+              <div class="form__field">
+                <input value="{{ profile.user.email }}" class="form__input" type="email" name="email" id="email">
+              </div>
+              <div class="form__field">
+                <input value="{{ profile.birth_date|date:'Y-m-d' }}" class="form__input" type="date" name="birth_date" id="id_birth_date">
+              </div>
+              <div class="form__actions"><a class="button" href="{% url 'profile_detail' profile.user.pk %}">Вернуться</a>
+                <button class="button" type="sumbit">Сохранить</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>
